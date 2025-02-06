@@ -6,11 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/NGO_Minimal_Setup/NGO_Setup.unity
-    guid: 740c3196efa53ad40afc808ce1f66d4a
+    path: Assets/App/Scenes/MainMenu.unity
+    guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
-    path: Assets/Widgets/Scenes/WidgetsQuickstart.unity
-    guid: 5e0ad3c611afb1e40bb4e05d905ce35f
+    path: Assets/App/Scenes/Game.unity
+    guid: 36e8e9084eccbbe44b3951ecd04922f0
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

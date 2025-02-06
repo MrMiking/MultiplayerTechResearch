@@ -24,8 +24,6 @@ public class WindowManager : MonoBehaviour
         [BoxGroup] public Window window;
     }
 
-
-
     private void OnEnable()
     {
         rseOpenWindow.action += OpenWindow;
@@ -68,8 +66,6 @@ public class WindowManager : MonoBehaviour
 
         if (newWindowIndex != currentWindowIndex)
         {
-            StopCoroutine("DisablePreviousWindow");
-
             currentWindow = windows[currentWindowIndex];
 
             currentWindowIndex = newWindowIndex;
@@ -79,14 +75,12 @@ public class WindowManager : MonoBehaviour
             //if (currentWindow.window != null) currentWindow.window.WindowFadeOut();
             //if (nextWindow.window != null) nextWindow.window.WindowFadeIn();
 
-            StartCoroutine("DisablePreviousWindow");
+            DisablePreviousWindow();
         }
     }
 
-    IEnumerator DisablePreviousWindow()
+    private void DisablePreviousWindow()
     {
-        yield return new WaitForSecondsRealtime(.2f);
-
         for (int i = 0; i < windows.Count; i++)
         {
             if (i == currentWindowIndex)

@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2d7735496cd37640974840b3160ba7d, type: 3}
-  m_Name: RSE_CreateRoom
+  m_Script: {fileID: 11500000, guid: 6f4f84631e0d90a4c85839a44b074c4c, type: 3}
+  m_Name: RSE_TryJoinRoom
   m_EditorClassIdentifier: 
