@@ -1,17 +1,21 @@
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.Events;
 public class Launcher : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private RSE_CreateRoom onCreateRoom;
+    [SerializeField] private RSE_CreateRoom createRoom;
+
+    public UnityEvent onCreateRoom;
+    public UnityEvent onRoomJoined;
 
     public override void OnEnable()
     {
-        onCreateRoom.action += CreateRoom;
+        createRoom.action += CreateRoom;
     }
 
     public override void OnDisable()
     {
-        onCreateRoom.action -= CreateRoom;
+        createRoom.action -= CreateRoom;
     }
 
     private void Start()
@@ -34,5 +38,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void CreateRoom(string roomName)
     {
         PhotonNetwork.CreateRoom(roomName);
+        onCreateRoom.Invoke();
+    }
+
+    public override void OnJoinedRoom()
+    {
+        onRoomJoined.Invoke();
     }
 }
