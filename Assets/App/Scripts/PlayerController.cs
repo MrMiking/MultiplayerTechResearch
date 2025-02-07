@@ -1,6 +1,7 @@
 using Photon.Pun;
+using TMPro;
 using UnityEngine;
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
     [Header("Settings")]
     [SerializeField] private float moveSpeed = 10.0f;
@@ -11,6 +12,10 @@ public class PlayerController : MonoBehaviour
     [Header("RSE")]
     [SerializeField] private RSE_Move onMove;
     [SerializeField] private RSE_Attack onAttack;
+
+    public TMP_Text hpText;
+
+    public float health = 100.0f;
 
     private void OnEnable()
     {
@@ -33,5 +38,11 @@ public class PlayerController : MonoBehaviour
     private void Attack()
     {
         Debug.Log("Attack");
+    }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        hpText.text = health.ToString();
     }
 }
