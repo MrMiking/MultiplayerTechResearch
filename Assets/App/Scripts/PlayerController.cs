@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     [SerializeField] private float moveSpeed = 10.0f;
 
     [Header("References")]
+    [SerializeField] private Rigidbody2D rb;
     [SerializeField] private PhotonView photonView;
 
     [Header("RSE")]
@@ -32,7 +33,8 @@ public class PlayerController : MonoBehaviour, IDamageable
     private void Move(Vector2 direction)
     {
         if (!photonView.IsMine) return;
-        transform.position += new Vector3(direction.x, direction.y, 0) * moveSpeed * Time.deltaTime;
+
+        rb.MovePosition(transform.position + new Vector3(direction.x, direction.y, 0) * moveSpeed * Time.deltaTime);
     }
 
     private void Attack()
@@ -42,7 +44,14 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage)
     {
-        health -= damage;
-        hpText.text = health.ToString();
+        photonView.RPC("RPC_TakeDamage", RpcTarget.All, damage);
+    }
+
+    [PunRPC]
+    private void RPC_TakeDamage(float damage)
+    {
+        if(!photonView.IsMine) return;
+
+        Debug.Log("Took Damage: " + damage);
     }
 }

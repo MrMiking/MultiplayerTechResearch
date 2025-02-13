@@ -53,6 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
+  rb: {fileID: 1228098100374627285}
   photonView: {fileID: 4433487116442419135}
   onMove: {fileID: 11400000, guid: 925524a76df0ab04e82abd3d5754b0a4, type: 2}
   onAttack: {fileID: 11400000, guid: db4293e3189418145837c5302441cb46, type: 2}
