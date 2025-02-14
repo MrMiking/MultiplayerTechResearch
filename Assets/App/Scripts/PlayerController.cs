@@ -1,4 +1,6 @@
 using Photon.Pun;
+using System.Collections;
+using System.IO;
 using TMPro;
 using UnityEngine;
 public class PlayerController : MonoBehaviour, IDamageable
@@ -9,6 +11,8 @@ public class PlayerController : MonoBehaviour, IDamageable
     [Header("References")]
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private PhotonView photonView;
+    [SerializeField] private Transform bulletSpawnPoint;
+    [SerializeField] private GameObject bulletPrefab;
 
     [Header("RSE")]
     [SerializeField] private RSE_Move onMove;
@@ -17,6 +21,8 @@ public class PlayerController : MonoBehaviour, IDamageable
     public TMP_Text hpText;
 
     public float health = 100.0f;
+
+    private float attackCooldown = 0;
 
     private void OnEnable()
     {
@@ -30,6 +36,11 @@ public class PlayerController : MonoBehaviour, IDamageable
         onAttack.action -= Attack;
     }
 
+    private void Update()
+    {
+        attackCooldown -= Time.deltaTime;
+    }
+
     private void Move(Vector2 direction)
     {
         if (!photonView.IsMine) return;
@@ -39,7 +50,13 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void Attack()
     {
-        Debug.Log("Attack");
+        if(!photonView.IsMine) return;
+
+        if(attackCooldown < 0)
+        {
+            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", bulletPrefab.name), bulletSpawnPoint.position, bulletSpawnPoint.rotation, 0);
+            attackCooldown = 2;
+        }
     }
 
     public void TakeDamage(float damage)
