@@ -5,9 +5,11 @@ using UnityEngine;
 public class GameManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private Transform[] spawnPoints;
 
     public void Start()
     {
-        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", playerPrefab.name), Vector3.zero, Quaternion.identity);
+        Vector3 spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)].position;
+        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", playerPrefab.name), spawnPoint, Quaternion.identity);
     }
 }

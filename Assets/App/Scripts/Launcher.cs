@@ -1,4 +1,6 @@
 using Photon.Pun;
+using Photon.Realtime;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,6 +11,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] private RSE_TryCreateRoom onTryCreateRoom;
     [SerializeField] private RSE_TryJoinRoom onTryJoinRoom;
     [SerializeField] private RSE_StartGame onStartGame;
+    [SerializeField] private RSE_LeaveRoom onLeaveRoom;
+    [SerializeField] private RSE_PlayerEnteredRoom onPlayerEnteredRoom;
 
     [Header("Events")]
     public UnityEvent onLoading;
@@ -18,21 +22,30 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnEnable()
     {
         base.OnEnable();
+
         onConnectToMaster.action += ConnectToMaster;
+
         onTryCreateRoom.action += TryCreateRoom;
         onTryJoinRoom.action += TryJoinRoom;
+        onLeaveRoom.action += LeaveRoom;
+
         onStartGame.action += StartGame;
     }
 
     public override void OnDisable()
     {
         base.OnDisable();
+
         onConnectToMaster.action -= ConnectToMaster;
+
         onTryCreateRoom.action -= TryCreateRoom;
         onTryJoinRoom.action -= TryJoinRoom;
+        onLeaveRoom.action -= LeaveRoom;
+
         onStartGame.action -= StartGame;
     }
 
+    #region LOBBY
     private void ConnectToMaster()
     {
         Debug.Log("Connecting to Master");
@@ -53,7 +66,9 @@ public class Launcher : MonoBehaviourPunCallbacks
         onJoinedLobby.Invoke();
         PhotonNetwork.NickName = "Player" + Random.Range(0, 1000).ToString("1000");
     }
+    #endregion
 
+    #region ROOM
     public void TryCreateRoom(string roomName)
     {
         Debug.Log("TryCreateRoom");
@@ -72,6 +87,13 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         Debug.Log("Room Created/Joined !");
         onJoinedRoom.Invoke();
+
+        Player[] players = PhotonNetwork.PlayerList;
+
+        for (int i = 0; i < players.Count(); i++)
+        {
+            onPlayerEnteredRoom.Call(players[i]);
+        }
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
@@ -85,6 +107,23 @@ public class Launcher : MonoBehaviourPunCallbacks
         Debug.Log("Room Creation Failed : " + message);
         onJoinedLobby.Invoke();
     }
+
+    public void LeaveRoom()
+    {
+        onLoading.Invoke();
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public override void OnLeftRoom()
+    {
+        onJoinedLobby.Invoke();
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        onPlayerEnteredRoom.Call(newPlayer);
+    }
+    #endregion
 
     public void StartGame()
     {

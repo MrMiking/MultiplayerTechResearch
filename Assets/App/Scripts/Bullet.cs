@@ -10,19 +10,29 @@ public class Bullet : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private PhotonView photonView;
 
+    private PhotonMessageInfo info;
+
     private void Start()
     {
         rb.linearVelocity = transform.up * movespeed;
+        Invoke(nameof(DestroyBullet), 3);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Trigger with: " + collision.name);
+        if(!photonView.IsMine) return;
+
         if(collision.TryGetComponent(out IDamageable damageable))
         {
             damageable.TakeDamage(damage);
         }
 
-        PhotonNetwork.Destroy(photonView);
+        DestroyBullet();
+    }
+
+    private void DestroyBullet()
+    {
+        if (!photonView.IsMine) return;
+        PhotonNetwork.Destroy(gameObject);
     }
 }
